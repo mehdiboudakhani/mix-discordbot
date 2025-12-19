@@ -1,6 +1,7 @@
 ﻿namespace Mix.Modules
 {
     [Group("temporary-voice-channels", "Temporary voice channels commands.")]
+    [DefaultMemberPermissions(GuildPermission.Administrator)]
     public class TemporaryVoiceChannelsModule : InteractionModuleBase<SocketInteractionContext>
     {
         private readonly DiscordSocketClient _discordSocketClient;
