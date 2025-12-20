@@ -4,4 +4,5 @@ global using Discord.WebSocket;
 
 global using Microsoft.Extensions.DependencyInjection;
 
+global using Mix.Factories;
 global using Mix.Modules;

@@ -15,6 +15,7 @@
             _serviceProvider = new ServiceCollection()
                 .AddSingleton(_discordSocketClient)
                 .AddSingleton(serviceProvider => new InteractionService(serviceProvider.GetRequiredService<DiscordSocketClient>()))
+                .AddSingleton<EmbedFactory>()
                 .BuildServiceProvider();
             _interactionService = _serviceProvider.GetRequiredService<InteractionService>();
         }
