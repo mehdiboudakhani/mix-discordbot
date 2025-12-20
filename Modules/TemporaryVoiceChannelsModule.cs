@@ -18,23 +18,58 @@
         public async Task AddHubAsync(IVoiceChannel voiceChannel)
         {
             if (_hubs.Add(voiceChannel.Id))
-                await RespondAsync($"Hub {voiceChannel.Name} added.", ephemeral: true);
+            {
+                var embed = new EmbedBuilder()
+                    .WithTitle("Success")
+                    .WithDescription($"Hub {voiceChannel.Name} added.")
+                    .WithColor(Color.Green)
+                    .Build();
+                await RespondAsync(embed: embed, ephemeral: true);
+            }
             else
-                await RespondAsync($"{voiceChannel.Name} is already a hub.", ephemeral: true);
+            {
+                var embed = new EmbedBuilder()
+                    .WithTitle("Failed")
+                    .WithDescription($"{voiceChannel.Name} is already a hub.")
+                    .WithColor(Color.Red)
+                    .Build();
+                await RespondAsync(embed: embed, ephemeral: true);
+            }
         }
 
         [SlashCommand("remove-hub", "Remove a hub.")]
         public async Task RemoveHubAsync(IVoiceChannel voiceChannel)
         {
             if (_hubs.Remove(voiceChannel.Id))
-                await RespondAsync($"Hub {voiceChannel.Name} removed.", ephemeral: true);
+            {
+                var embed = new EmbedBuilder()
+                    .WithTitle("Success")
+                    .WithDescription($"Hub {voiceChannel.Name} removed.")
+                    .WithColor(Color.Green)
+                    .Build();
+                await RespondAsync(embed: embed, ephemeral: true);
+            }
             else
-                await RespondAsync($"{voiceChannel.Name} is not a hub.", ephemeral: true);
+            {
+                var embed = new EmbedBuilder()
+                    .WithTitle("Failed")
+                    .WithDescription($"{voiceChannel.Name} is not a hub.")
+                    .WithColor(Color.Red)
+                    .Build();
+                await RespondAsync(embed: embed, ephemeral: true);
+            }
         }
 
         [SlashCommand("list-hubs", "List hubs.")]
-        public async Task ListHubsAsync() =>
-            await RespondAsync(_hubs.Count == 0 ? "No hubs." : string.Join("\n", _hubs.Select(id => $"<#{id}>")));
+        public async Task ListHubsAsync()
+        {
+            var embed = new EmbedBuilder()
+                .WithTitle("Success")
+                .WithDescription(_hubs.Count == 0 ? "No hubs." : string.Join("\n", _hubs.Select(id => $"<#{id}>")))
+                .WithColor(Color.Green)
+                .Build();
+            await RespondAsync(embed: embed, ephemeral: true);
+        }
 
         private async Task HandleTemporaryVoiceChannelsAsync(SocketUser user, SocketVoiceState before, SocketVoiceState after)
         {
