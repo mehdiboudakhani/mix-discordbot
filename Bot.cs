@@ -16,6 +16,7 @@
                 .AddSingleton(_discordSocketClient)
                 .AddSingleton(serviceProvider => new InteractionService(serviceProvider.GetRequiredService<DiscordSocketClient>()))
                 .AddSingleton<EmbedFactory>()
+                .AddSingleton<SecretProvider>()
                 .BuildServiceProvider();
             _interactionService = _serviceProvider.GetRequiredService<InteractionService>();
         }
@@ -25,7 +26,7 @@
             await _interactionService.AddModulesAsync(typeof(TemporaryVoiceChannelsModule).Assembly, _serviceProvider);
             _discordSocketClient.InteractionCreated += OnInteractionCreatedAsync;
             _discordSocketClient.Ready += OnReadyAsync;
-            await _discordSocketClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("MIX_DISCORD_BOT_TOKEN"));
+            await _discordSocketClient.LoginAsync(TokenType.Bot, _serviceProvider.GetRequiredService<SecretProvider>().DiscordBotToken);
             await _discordSocketClient.StartAsync();
             await Task.Delay(-1);
         }
@@ -34,6 +35,6 @@
             await _interactionService.ExecuteCommandAsync(new SocketInteractionContext(_discordSocketClient, socketInteraction), _serviceProvider);
 
         private async Task OnReadyAsync() =>
-            await _interactionService.RegisterCommandsToGuildAsync(ulong.Parse(Environment.GetEnvironmentVariable("MIX_DISCORD_GUILD_IDENTIFIER")!));
+            await _interactionService.RegisterCommandsToGuildAsync(ulong.Parse(_serviceProvider.GetRequiredService<SecretProvider>().DiscordGuildIdentifier));
     }
 }
